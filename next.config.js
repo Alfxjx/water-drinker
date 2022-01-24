@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  reactStrictMode: true,
-  basePath: "/water-drinker"
-}
+	reactStrictMode: true,
+	basePath: "/water-drinker",
+	webpack: (config, options) => {
+		config.module.rules.push({
+			test: /\.svg$/,
+			use: ["@svgr/webpack"],
+		});
+		return config;
+	},
+};

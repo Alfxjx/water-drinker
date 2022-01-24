@@ -1,29 +1,30 @@
 {
-  "name": "water-drinker",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "export": "next export -o docs"
-  },
-  "dependencies": {
-    "autoprefixer": "^10.4.0",
-    "next": "12.0.4",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-lottie": "^1.2.3",
-    "react-toastify": "^8.1.0",
-    "styled-components": "^5.3.3"
-  },
-  "devDependencies": {
-    "@types/node": "16.11.11",
-    "@types/react": "17.0.37",
-    "babel-plugin-inline-react-svg": "^2.0.1",
-    "babel-plugin-styled-components": "^2.0.2",
-    "eslint": "7.32.0",
-    "eslint-config-next": "12.0.4",
-    "typescript": "4.5.2"
-  }
+	"name": "water-drinker",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"export": "next export -o docs"
+	},
+	"dependencies": {
+		"autoprefixer": "^10.4.0",
+		"next": "12.0.4",
+		"react": "17.0.2",
+		"react-copy-to-clipboard": "^5.0.4",
+		"react-dom": "17.0.2",
+		"react-lottie": "^1.2.3",
+		"react-toastify": "^8.1.0",
+		"styled-components": "^5.3.3"
+	},
+	"devDependencies": {
+		"@svgr/webpack": "^6.2.0",
+		"@types/node": "16.11.11",
+		"@types/react": "17.0.37",
+		"babel-plugin-styled-components": "^2.0.2",
+		"eslint": "7.32.0",
+		"eslint-config-next": "12.0.4",
+		"typescript": "4.5.2"
+	}
 }

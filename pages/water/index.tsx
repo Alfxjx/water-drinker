@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Lottie from "react-lottie";
 import { useRouter } from "next/router";
+
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
 import { Button, TextButton } from "@/components/Button";
 import WaterLottie from "../../public/glass-water.json";
 import { toast } from "@/components/Toast";
@@ -195,6 +198,10 @@ export default function Water() {
 		// BUG double toast
 		// toast(`cup ${index}`)
 	};
+
+	const handleText = () => {
+		return window?.location.href;
+	};
 	return (
 		<BaseLayout title="drink water">
 			<WaterWrapper>
@@ -251,9 +258,21 @@ export default function Water() {
 
 					{target > 0 && current > 0 ? (
 						<div className="handlers">
-							<Button btnType="primary" onClick={() => doDrink()}>
+							<Button
+								btnType="primary"
+								style={{ marginRight: "5px" }}
+								onClick={() => doDrink()}
+							>
 								Drink ({current} left)
 							</Button>
+							<CopyToClipboard
+								text={handleText()}
+								onCopy={() => {
+									toast.success("Copy Success");
+								}}
+							>
+								<Button>Share</Button>
+							</CopyToClipboard>
 						</div>
 					) : (
 						target > 0 && (

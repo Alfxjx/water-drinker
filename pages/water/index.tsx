@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Lottie from "react-lottie";
+import { useRouter } from "next/router";
 import { Button, TextButton } from "@/components/Button";
 import WaterLottie from "../../public/glass-water.json";
 import { toast } from "@/components/Toast";
@@ -84,7 +85,7 @@ const WaterItem = ({
 		<Lottie
 			options={{
 				loop: false,
-				autoplay: false,
+				autoplay: true,
 				animationData: WaterLottie,
 				rendererSettings: {
 					preserveAspectRatio: " xMidYMid slice",
@@ -106,6 +107,8 @@ const WaterItem = ({
 };
 
 export default function Water() {
+	const router = useRouter();
+
 	const [number, setNumber] = useState(0);
 	// 目标
 	const [target, setTarget] = useState(0);
@@ -114,15 +117,40 @@ export default function Water() {
 	const [current, setCurrent] = useState(0);
 
 	useEffect(() => {
-		const temp = Number(window.localStorage.getItem("target"));
-		const currentFromStorage = window.localStorage.getItem("current");
-		if (currentFromStorage) {
-			setCurrent(Number(currentFromStorage));
-		} else {
-			setCurrent(temp);
+		function getDataFromStorage() {
+			const temp = Number(window.localStorage.getItem("target"));
+			const currentFromStorage = window.localStorage.getItem("current");
+			if (currentFromStorage) {
+				setCurrent(Number(currentFromStorage));
+			} else {
+				setCurrent(temp);
+			}
+			setTarget(temp);
 		}
-		setTarget(temp);
-	}, []);
+		function getDataFromQuery() {
+			const temp = Number(router.query.target);
+			const currentFromQuery = Number(router.query.left);
+			window.localStorage.setItem("getQuery", "getFromQuery");
+			window.localStorage.setItem("left", router.query.left as string);
+			window.localStorage.setItem("target", router.query.target as string);
+			if (currentFromQuery) {
+				setCurrent(Number(currentFromQuery));
+			} else {
+				setCurrent(temp);
+			}
+			setTarget(temp);
+		}
+		// 只有当query有数据，并且没有保存到storage里面的时候触发从query拿
+		if (
+			router.query &&
+			router.query.target &&
+			!window.localStorage.getItem("getQuery")
+		) {
+			getDataFromQuery();
+		} else {
+			getDataFromStorage();
+		}
+	}, [router]);
 
 	useEffect(() => {
 		const temp = [];
@@ -135,15 +163,14 @@ export default function Water() {
 		for (let j = 0; j < target - current; j++) {
 			temp[j].water = true;
 		}
-		// TODO 刷新页面的时候，这里的更新不会刷新倒水状态
-		setTargetList(()=>[...temp]);
+		setTargetList(() => [...temp]);
 	}, [target, current]);
 
 	useEffect(() => {
 		if (current === 0 && target !== 0) {
 			toast.success("You drunk enough water today");
 		}
-	}, [current]);
+	}, [current, target]);
 
 	const targetSet = () => {
 		window.localStorage.setItem("target", number.toString());
@@ -157,12 +184,13 @@ export default function Water() {
 		setTarget(0);
 	};
 
-	const drink = () => {
+	const doDrink = () => {
 		setCurrent(current - 1);
 		window.localStorage.setItem("current", (current - 1).toString());
 		targetList[target - current].water = true;
-		setTargetList(()=>[...targetList]);
+		setTargetList(() => [...targetList]);
 	};
+
 	const handleDrink = (index) => {
 		// BUG double toast
 		// toast(`cup ${index}`)
@@ -223,7 +251,7 @@ export default function Water() {
 
 					{target > 0 && current > 0 ? (
 						<div className="handlers">
-							<Button btnType="primary" onClick={() => drink()}>
+							<Button btnType="primary" onClick={() => doDrink()}>
 								Drink ({current} left)
 							</Button>
 						</div>

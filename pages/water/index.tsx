@@ -88,7 +88,7 @@ const WaterItem = ({
 		<Lottie
 			options={{
 				loop: false,
-				autoplay: true,
+				autoplay: isDrink,
 				animationData: WaterLottie,
 				rendererSettings: {
 					preserveAspectRatio: " xMidYMid slice",
@@ -103,7 +103,7 @@ const WaterItem = ({
 			isClickToPauseDisabled={true}
 			height={50}
 			width={50}
-			speed={4}
+			speed={8}
 			isStopped={!isDrink}
 		></Lottie>
 	);
@@ -134,7 +134,7 @@ export default function Water() {
 			const temp = Number(router.query.target);
 			const currentFromQuery = Number(router.query.left);
 			window.localStorage.setItem("getQuery", "getFromQuery");
-			window.localStorage.setItem("left", router.query.left as string);
+			window.localStorage.setItem("current", router.query.left as string);
 			window.localStorage.setItem("target", router.query.target as string);
 			if (currentFromQuery) {
 				setCurrent(Number(currentFromQuery));
@@ -184,6 +184,7 @@ export default function Water() {
 	const targetReset = () => {
 		window.localStorage.removeItem("target");
 		window.localStorage.removeItem("current");
+		window.localStorage.removeItem("getQuery");
 		setTarget(0);
 	};
 
@@ -200,7 +201,10 @@ export default function Water() {
 	};
 
 	const handleText = () => {
-		return window?.location.href;
+		const urlPath = window?.location.href.split("?")[0];
+		const target = window?.localStorage.getItem("target");
+		const left = window?.localStorage.getItem("current");
+		return `${urlPath}?target=${target}&left=${left}`;
 	};
 	return (
 		<BaseLayout title="drink water">
@@ -244,15 +248,16 @@ export default function Water() {
 
 					<div className="results">
 						<div className="cups">
-							{targetList.map((item, index) => {
-								return (
-									<WaterItem
-										key={item.index}
-										isDrink={item.water}
-										handleDrink={() => handleDrink(index)}
-									/>
-								);
-							})}
+							{targetList.length > 0 &&
+								targetList.map((item, index) => {
+									return (
+										<WaterItem
+											key={item.index}
+											isDrink={item.water}
+											handleDrink={() => handleDrink(index)}
+										/>
+									);
+								})}
 						</div>
 					</div>
 

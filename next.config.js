@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
 	reactStrictMode: true,
-	basePath: "/water-drinker",
+	basePath: process.env.NODE_ENV === "development" ? "" : "/water-drinker",
 	webpack: (config, options) => {
 		config.module.rules.push({
 			test: /\.svg$/,
